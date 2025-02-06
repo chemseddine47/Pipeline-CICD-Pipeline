@@ -1,6 +1,6 @@
 Install the image:
 
-    docker pull sonarqube
+    docker pull sonarqube 
 
 creating volums : 
     docker volume create sonarqube_data
