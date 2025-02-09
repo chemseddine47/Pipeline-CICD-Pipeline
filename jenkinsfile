@@ -2,30 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Smoke Test') {
+        stage('Hello') {
             steps {
-                script {
-                    // Attempt to retrieve the HTTP status code from Juice Shop
-                    def response = sh(
-                        script: "curl -s -o /dev/null -w '%{http_code}' http://juice-shop:3000",
-                        returnStdout: true
-                    ).trim()
-                    
-                    echo "HTTP Response Code: ${response}"
-                    
-                    if (response != "200") {
-                        error("Juice Shop is not responding as expected (HTTP ${response}).")
-                    } else {
-                        echo "Juice Shop is up and running."
-                    }
-                }
+                echo 'Hello World'
             }
-        }
-    }
-
-    post {
-        always {
-            echo "Pipeline execution completed."
         }
     }
 }
