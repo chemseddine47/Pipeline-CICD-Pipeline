@@ -2,6 +2,15 @@ pipeline {
     agent any
 
     stages {
+        stage('install') {
+            steps {
+                sh '''
+                    apt-get update && apt-get install -y docker-ce-cli
+                '''
+            }
+
+        }
+
         stage('Build') {
             agent {
                 docker {
