@@ -1,21 +1,25 @@
 pipeline {
-    agent any // Define the agent for the entire pipeline
+    agent any
 
     stages {
+
+        
+        
         stage('Deploy') {
-            steps {
-                withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
-                    sh '''
-                        git config user.name "chemseddine47"
-                        git config user.email "chamssedine47007@gmail.com"
-                        cd "$WORKSPACE"
-                        git checkout gh-pages || git checkout --orphan gh-pages
-                        rm -rf *
-                        cp -r build/* .
-                        git add .
-                        git commit -m "Deploying to GitHub Pages"
-                        git push https://${GITHUB_TOKEN}@github.com/chemseddine47/Pipeline-CICD-Pipeline.git gh-pages
-                    '''
+        steps {
+            withEnv(['GIT_SSH_COMMAND=ssh -i ~/.ssh/jenkins_deploy_key_new -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no']) {
+                sh '''
+                    git config user.name "chemseddine47"
+                    git config user.email "chamssedine47007@gmail.com"
+                    git clone git@github.com:chemseddine47/Pipeline-CICD-Pipeline.git
+                    cd your-repo
+                    git checkout gh-pages || git checkout --orphan gh-pages
+                    rm -rf *
+                    cp -r ../build/* .
+                    git add .
+                    git commit -m "Deploying to GitHub Pages"
+                    git push origin gh-pages
+                '''
                 }
             }
         }
