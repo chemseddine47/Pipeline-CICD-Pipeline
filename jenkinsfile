@@ -29,6 +29,7 @@ pipeline {
                 sh '''
                 test -f build/index.html
                 npm test
+                ls -la
                 '''
             }
         }
@@ -40,14 +41,10 @@ pipeline {
                     sh '''
                         git config user.name "chemseddine47"
                         git config user.email "chamssedine47007@gmail.com"
-                        ls -la
-                        cd Pipeline-CICD-Pipeline
+                        cd "$WORKSPACE"
                         git checkout gh-pages || git checkout --orphan gh-pages
-                        rm -rf *
-                        cp -r build/* .
-                        git add .
-                        git commit -m "Deploying to GitHub Pages"
-                        git push https://${GITHUB_TOKEN}@github.com/chemseddine47/Pipeline-CICD-Pipeline.git gh-pages
+                        ls -l 
+                        ls -l ../
                     '''
                 }
             }
