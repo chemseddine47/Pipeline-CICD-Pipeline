@@ -43,7 +43,8 @@ pipeline {
                         git config user.email "chamssedine47007@gmail.com"
                         cd "$WORKSPACE"
                         git checkout gh-pages || git checkout --orphan gh-pages
-                        rm -rf *
+                        shopt -s extglob
+                        rm -rf * !(build)
                         cp -r build/* .
                         git add .
                         git commit -m "Deploying to GitHub Pages"
