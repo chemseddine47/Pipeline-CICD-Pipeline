@@ -20,7 +20,7 @@ pipeline {
         
         stage('Deploy') {
         steps {
-            withEnv(['GIT_SSH_COMMAND=ssh -i ~/.ssh/jenkins_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no']) {
+            withEnv(['GIT_SSH_COMMAND=ssh -i ~/.ssh/jenkins_deploy_key_new -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no']) {
                 sh '''
                     git config user.name "chemseddine47"
                     git config user.email "chamssedine47007@gmail.com"
