@@ -7,7 +7,7 @@ pipeline {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
-            }
+                }
             }
             steps {
                 sh '''
@@ -17,23 +17,33 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            agent none
+            steps {
+                withSonarQubeEnv('SonarQube') { // Make sure the SonarQube configuration is correct in Jenkins
+                    sh '''
+                        npm install sonar-scanner --save-dev
+                        npx sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
+                    '''
+                }
+            }
+        }
 
-        stage('Test'){
+        stage('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
+                }
             }
-            }
-            steps{
+            steps {
                 sh '''
-                test -f build/index.html
-                npm test
-                ls -la
+                    test -f build/index.html
+                    npm test
+                    ls -la
                 '''
             }
         }
-
 
         stage('Deploy') {
             steps {
@@ -55,8 +65,5 @@ pipeline {
                 }
             }
         }
-        
-        
-        
     }
 }
