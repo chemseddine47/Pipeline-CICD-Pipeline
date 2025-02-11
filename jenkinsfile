@@ -19,15 +19,14 @@ pipeline {
 
         stage('SonarQube Analysis') {
             agent none
-            steps {
-                withSonarQubeEnv('SonarQube') { // Make sure the SonarQube configuration is correct in Jenkins
-                    sh '''
-                        npm install sonar-scanner --save-dev
-                        npx sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
-                    '''
+                steps {
+                    withSonarQubeEnv('SonarQube') {  // Make sure the SonarQube server is configured properly in Jenkins
+                        sh '''
+                            sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
+                        '''
+            
+                    }
                 }
-            }
-        }
 
         stage('Test') {
             agent {
