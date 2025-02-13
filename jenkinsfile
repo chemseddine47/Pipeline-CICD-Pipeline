@@ -2,7 +2,16 @@ pipeline {
     agent any
 
     stages {
-
+        stage('SonarQube Analysis') {
+            agent none
+            steps {
+                withSonarQubeEnv('SonarQube') {  // Make sure the SonarQube server is configured properly in Jenkins
+                    sh '''
+                        /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
+                    '''
+                }
+            }
+        }
 
         stage('Build') {
             agent {
@@ -24,7 +33,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {  // Make sure the SonarQube server is configured properly in Jenkins
                     sh '''
-                        sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
+                        /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
                     '''
                 }
             }
