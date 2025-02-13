@@ -8,7 +8,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {  // Make sure the SonarQube server is configured properly in Jenkins
                     sh '''
-                        /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=Secure-CI-CD-Pipeline
+                         
+                        /opt/sonar-scanner/bin/sonar-scanner \
+                            -Dsonar.projectKey=Secure-CI-CD-Pipeline \
+                            -Dsonar.host.url=http://sonarqube:9000 
+                    
                     '''
                 }
             }
