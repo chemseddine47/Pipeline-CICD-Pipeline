@@ -1,41 +1,53 @@
 pipeline {
-    agent any
+    agent any 
+
+    environment {
+        SONAR_HOST_URL = 'http://sonarqube:9000' 
+    }
 
     stages {
-
-        stage('Build') {
+        stage('Build App') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    // UPGRADED to Node 22 (Active Version)
+                    image 'node:22-alpine'
                     reuseNode true
                 }
             }
             steps {
-                sh '''
-                    npm ci
-                    npm run build
-                '''
+                sh 'npm ci'
+                sh 'npm run build'
             }
         }
-        
-        stage('SonarQube Analysis') {
-            agent none
+
+        stage('E2E Tests') {
+            agent {
+                docker {
+                    // UPGRADED to Playwright v1.50
+                    image 'mcr.microsoft.com/playwright:v1.50.0-jammy'
+                    reuseNode true
+                    args '--ipc=host --env CI=true' 
+                }
+            }
             steps {
-                withSonarQubeEnv('SonarQube') {  // Make sure the SonarQube server is configured properly in Jenkins
-                    sh '''
-                         
-                        /opt/sonar-scanner/bin/sonar-scanner \
-                            -Dsonar.projectKey=Secure-CI-CD-Pipeline \
-                            -Dsonar.host.url=http://sonarqube:9000 
-                    
-                    '''
+                sh 'npm ci'
+                sh 'npx playwright test' 
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:latest'
+                    // IMPORTANT: Check your network name with "docker network ls" after starting!
+                    args '--network=pipeline-cicd-pipeline_cicd-net'
+                }
+            }
+            steps {
+                withSonarQubeEnv('MySonarServer') { 
+                    sh 'sonar-scanner -Dsonar.projectKey=react-cicd-demo -Dsonar.sources=src'
                 }
             }
         }
-
-        
-
-
-      
     }
 }
