@@ -30,7 +30,8 @@ pipeline {
             }
             steps {
                 sh 'npm ci'
-                sh 'npx playwright test' 
+                sh 'npm install -g serve'
+                sh 'npx serve -s build -l 3000 & sleep 10 && npx playwright test' 
             }
         }
 
@@ -38,7 +39,6 @@ pipeline {
             agent {
                 docker {
                     image 'sonarsource/sonar-scanner-cli:latest'
-                    // IMPORTANT: Check your network name with "docker network ls" after starting!
                     args '--network=pipeline-cicd-pipeline_cicd-net'
                 }
             }
